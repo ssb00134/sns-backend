@@ -11,6 +11,10 @@ const { sequelize } = require('./models');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
+//passport설정
+const passport = require('passport');
+const passportConfig = require('./passport');
+
 
 const app = express();
 app.set('port', process.env.PORT || 4000);
@@ -44,6 +48,10 @@ app.use('/', pageRouter);
 
 //db설정
 sequelize.sync();
+
+//passport설정
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기중');
