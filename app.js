@@ -15,10 +15,17 @@ const pageRouter = require('./routes/page');
 const passport = require('passport');
 const passportConfig = require('./passport');
 
-
 const app = express();
 app.set('port', process.env.PORT || 4000);
 
+//db설정
+sequelize.sync();
+passportConfig();
+
+nunjucks.configure('views', {
+  express: app,
+  watch: true,
+});
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
@@ -44,14 +51,11 @@ app.engine('jsx', require('express-react-views').createEngine());
 
 app.use(cors());
 
-app.use('/', pageRouter);
-
-//db설정
-sequelize.sync();
-
 //passport설정
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use('/', pageRouter);
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기중');
