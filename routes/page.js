@@ -14,9 +14,8 @@ router.get('/', (req, res, next) => {
   });
 });
 
-router.get('/join', (req, res, next) => {
+router.get('/join', isNotLoggedIn, (req, res, next) => {
   console.log('main page');
-  console.log('req.isAuth', req.isAuthenticated());
   res.send({
     title: '회원가입',
     user: null,
