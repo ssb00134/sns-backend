@@ -3,14 +3,25 @@ const router = express.Router();
 const path = require('path');
 const cors = require('cors');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
+
+const { User, Post } = require('../models');
+
 router.get('/', (req, res, next) => {
   console.log('main page');
-  res.send({
-    title: 'NodeBird',
-    twits: [],
-    user: null,
-    loginError: req.flash('loginError'),
-    post: '123',
+  Post.findAll({
+    include: {
+      model: User,
+      atributes: ['id', 'nick'],
+      order: [['createAt', 'DESC']],
+    },
+  }).then((posts) => {
+    console.log('posts : ', posts);
+    res.send({
+      title: 'nordBird',
+      twits: posts,
+      user: req.user,
+      loginError: req.flash('loginError'),
+    });
   });
 });
 

@@ -1,8 +1,6 @@
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
-const User = require('./user');
-
 
 const db = {};
 const sequelize = new Sequelize(
@@ -13,11 +11,19 @@ const sequelize = new Sequelize(
 );
 
 db.sequelize = sequelize;
-db.User = User;
+db.User = require('./user')(sequelize, Sequelize);
+db.Post = require('./post')(sequelize, Sequelize);
 
-User.init(sequelize);
+db.User.hasMany(db.Post);
+db.Post.belongsTo(db.User);
 
-User.associate(db);
+db.User.belongsToMany(db.User, {
+  forignKey: 'followerId',
+  as: 'Followings',
+  through: 'follow',
+});
+
+
 
 
 module.exports = db;

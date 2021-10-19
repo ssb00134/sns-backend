@@ -41,6 +41,7 @@ router.post('/login', isNotLoggedIn, (req, res, next) => {
         req.flash('loginError', info);
         return next(loginError);
       }
+      console.log('redirect실행');
       return res.redirect('/');
     });
   })(req, res, next);
@@ -50,4 +51,15 @@ router.get('/logout', isLoggedIn, (req, res) => {
   req.session.destroy();
   res.redirect('/');
 });
+
+//카카오 로그인 구현
+router.get(
+  '/kakao',
+  passport.authenticate('kakao', {
+    failureRedirect: '/',
+  }),
+  (req, res) => {
+    res.redirect('/');
+  },
+);
 module.exports = router;
