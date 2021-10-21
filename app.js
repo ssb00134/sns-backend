@@ -13,6 +13,7 @@ dotenv.config();
 //라우터설정
 const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
+const postRouter = require('./routes/post');
 //passport설정
 const passport = require('passport');
 const passportConfig = require('./passport');
@@ -59,6 +60,7 @@ app.use(passport.session());
 
 app.use('/', pageRouter);
 app.use('/auth', authRouter);
+app.use('/post', postRouter);
 
 app.listen(app.get('port'), () => {
     console.log(app.get('port'), '번 포트에서 대기중');
